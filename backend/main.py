@@ -16,8 +16,9 @@ from app.models import Base
 from app.database import engine
 from app.api.auth import router as auth_router
 from app.api.email import router as email_router
-from app.api.transactions import router as transaction_router
-from app.api.leaks import router as leaks_router
+from app.api.transactions_new import router as transaction_router
+from app.core.leak_analyzer import router as leaks_router
+# from app.api.transactions import router as transaction_router
 
 # Create tables
 Base.metadata.create_all(bind=engine)
@@ -41,8 +42,8 @@ app.add_middleware(
 # ==================== ROUTES ====================
 app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(email_router, prefix="/api/email", tags=["Email"])
-app.include_router(transaction_router, prefix="/api/transactions", tags=["Transactions"])
-app.include_router(leaks_router, prefix="/api/leaks", tags=["Leaks"])
+app.include_router(transaction_router, tags=["Transactions"])
+app.include_router(leaks_router, tags=["Leaks"])
 
 # ==================== HEALTH CHECK ====================
 @app.get("/health", tags=["Health"])
