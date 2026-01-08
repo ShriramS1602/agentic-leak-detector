@@ -5,15 +5,16 @@
 
 // RSA Public Key - This should match the private key in the backend
 // In production, this should be fetched from the server or environment
-const RSA_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoysR/CU7zMb1/ul607B1
-MZiAdsNL6vjY1WV+6NPc/7PKvk+wdfmY51HdNn1Vf1Bzmm3I1D/wH9sP4an+/Nnd
-hEaPryVkTd6RfpIaN1rQmeLCXzU58HDEPD36sw8czsy0fp5TBjLpwQ26G4NKcF3l
-+erqUE1KKwxkqf8GebVW2L6u4rg+3EJLMaHWtlQdYNDH+vp43bt71NUjp0GhtDse
-K0Sf529sATFHgk3ZH1M51RPigDXtDQTpRzb27LeJkfsPD7dstnG2paSJNGcu2KZw
-2K96KABm5Rnyr69mcOFLGKujq+ObPCdvWJYjRaSKZ+wiVJAUIn8Al7MqVTiabdOa
-4wIDAQAB
------END PUBLIC KEY-----`;
+// const RSA_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxsykVG1JLJ1mJ+aUJyXx
+// ZzNuO+CyVQfW3l6XVTUQ1TlGjL7pb4CoL5sRf6f4+AZB6lmf2XZfRmaNTnLBQQMv
+// l02bRECM8ZcR/aHQ+LVLhiCKxEmbTcHMMT4A2eKpuu+WMiuLxtoKWkLog2jazqwi
+// Em6lNxvU5/UCBVbB5LWDBE9J3nBpfp2n4Ptjg4UWPrhT1Yc/cVWs6zzVLVRCZx19
+// m6uPxIKPMMSDW4cVSWKQ+yCRyD4JyGmofklVuqMSv33w4QOyRrkP8cfFt0lG946x
+// fQ0OMt1m1N1w+Bs8yxrnv8PnHcsjCwATG7V0TD+a3x41EpuUraTn6wEENP+QZBgo
+// FwIDAQAB
+// -----END PUBLIC KEY-----`;
+const RSA_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu1SU1LfVLfHCozMxH2Mo\n4lgOP+IJEPh5/G9y93Mid7t3VNcyyYDS7lbOaUvZ9/tv0t8vCeniRBwgnrxFgGio\n8BQI2N1U0A8lSsDyJOwV5HCaRFqYhVtn9WSW6oMYD8b2F7y5wFTKc+q6xllq+DLg\niT5eaSocROi5BvCvUVNRxCeW0KkGb7R1Yb6lfA5NKd2IwWVbxFfvM+CkyR/CwNGq\nJbFl2L6SL1OeEA8RZSflQXDkVr0bWGSI3mVPQmVVo8+tqn/BwQxEX+oY1dFBBp5y\nXxGtJLe7LIRIMLnJ6hWM9fNpNQk3q8DfXwdvpTKhL2kJ0mP7KxQXQfr1OiEhDILp\n/8dHdWQjAgMBAAE=\n-----END PUBLIC KEY-----"
 
 /**
  * Convert a string to ArrayBuffer
@@ -48,10 +49,10 @@ async function importPublicKey(pemKey: string): Promise<CryptoKey> {
     .replace('-----BEGIN PUBLIC KEY-----', '')
     .replace('-----END PUBLIC KEY-----', '')
     .replace(/\s/g, '');
-  
+
   const binaryDer = atob(pemContents);
   const buffer = str2ab(binaryDer);
-  
+
   return await crypto.subtle.importKey(
     'spki',
     buffer,
@@ -73,13 +74,13 @@ export async function encryptPassword(password: string): Promise<string> {
     const publicKey = await importPublicKey(RSA_PUBLIC_KEY);
     const encoder = new TextEncoder();
     const data = encoder.encode(password);
-    
+
     const encrypted = await crypto.subtle.encrypt(
       { name: 'RSA-OAEP' },
       publicKey,
       data
     );
-    
+
     return ab2b64(encrypted);
   } catch (error) {
     console.error('Password encryption failed:', error);
